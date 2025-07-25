@@ -1,0 +1,20 @@
+SPEC org.bouncycastle.crypto.params.RSAKeyParameters
+
+OBJECTS
+	boolean isPrivate;
+	java.math.BigInteger modulus;
+	java.math.BigInteger exponent;
+	
+EVENTS
+	c1: RSAKeyParameters(isPrivate, modulus, exponent);
+	Con := c1;
+
+ORDER
+	Con	
+	
+CONSTRAINTS
+	modulus >= 3000; // BSI describes length of the modulus n to be at least 2000 bits
+	isPrivate == true => notHardCoded[exponent];
+
+ENSURES
+	generatedRSAKeyParameters[this];

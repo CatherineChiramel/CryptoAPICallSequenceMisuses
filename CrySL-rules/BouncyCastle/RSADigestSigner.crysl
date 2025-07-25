@@ -1,0 +1,52 @@
+SPEC org.bouncycastle.crypto.signers.RSADigestSigner
+
+OBJECTS
+	org.bouncycastle.crypto.Digest digest;
+	org.bouncycastle.crypto.CipherParameters params;
+	
+	byte inputByte;
+	byte[] inputBytes;
+	int inputBytesOffset;
+	int inputBytesLen;
+
+	byte[] generatedSignature;
+	
+	byte[] signature;	
+	boolean forSigning;
+	
+EVENTS
+	c1: RSADigestSigner(digest);
+	c2: RSADigestSigner(digest, _);
+	Con := c1 | c2;
+	
+	i1: init(forSigning, params);
+	Init := i1;
+	
+	u1: update(inputByte);
+	u2: update(inputBytes, inputBytesOffset, inputBytesLen);
+	Update := u1 | u2;
+	
+	s1: generatedSignature = generateSignature();
+	Sign := s1;
+
+	v1: verifySignature(signature);
+	Verify := v1;
+	
+ORDER
+	(Con, Init, Update+, (Sign | Verify))+
+	
+CONSTRAINTS
+	length[inputBytes] >= inputBytesOffset + inputBytesLen;
+	inputBytesOffset >= 0;
+	inputBytesLen > 0;
+	forSigning in {true} => noCallTo[Verify];
+	forSigning in {false} => noCallTo[Sign];
+		
+REQUIRES
+	generatedSHA256Digest[digest];
+	generatedRSAKeyParameters[params] || generatedRSAPrivateCrtKeyParameters[params] || generatedECPublicKeyParameters[params];
+
+ENSURES
+	signed[generatedSignature] after Sign;
+	verified[signature] after Verify;
+	

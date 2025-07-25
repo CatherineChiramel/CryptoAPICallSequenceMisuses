@@ -1,0 +1,27 @@
+SPEC org.bouncycastle.crypto.ec.ECFixedTransform
+
+OBJECTS
+	org.bouncycastle.crypto.CipherParameters keyParams;
+	java.math.BigInteger k;
+	org.bouncycastle.crypto.ec.ECPair cipherText;
+	org.bouncycastle.crypto.ec.ECPair transformedCipherText;
+
+EVENTS
+	c1: ECFixedTransform(k);
+	Con := c1;
+	
+	i1: init(keyParams);
+	Init := i1;
+	
+	t1: transformedCipherText = transform(cipherText);
+	Transform := t1;
+
+ORDER
+	Con, Init, Transform+
+
+REQUIRES
+	generatedECPublicKeyParameters[keyParams];
+	generatedECPair[cipherText];
+
+ENSURES
+	generatedECFixedTransform[transformedCipherText] after Transform;

@@ -1,0 +1,18 @@
+SPEC org.bouncycastle.crypto.params.ECKeyParameters
+
+OBJECTS
+	org.bouncycastle.crypto.params.ECDomainParameters params;
+	boolean isPrivate;
+
+EVENTS
+	c1: ECKeyParameters(isPrivate, params);
+	Con := c1;
+
+ORDER
+	Con
+
+REQUIRES
+	generatedECDomainParameters[params];
+
+ENSURES
+	generatedECKeyParameters[this];

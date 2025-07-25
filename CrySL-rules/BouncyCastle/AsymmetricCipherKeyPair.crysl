@@ -1,0 +1,19 @@
+SPEC org.bouncycastle.crypto.AsymmetricCipherKeyPair
+
+OBJECTS
+	org.bouncycastle.crypto.params.AsymmetricKeyParameter publicParams;
+	org.bouncycastle.crypto.params.AsymmetricKeyParameter privateParams;
+	
+EVENTS
+	c1: AsymmetricCipherKeyPair(publicParams, privateParams);
+	Con := c1;
+	
+ORDER
+	Con
+	 
+REQUIRES
+	generatedRSAKeyParameters[publicParams];
+	generatedRSAPrivateCrtKeyParameters[privateParams];
+	
+ENSURES
+	generatedRSAKeyPair[this] after Con;

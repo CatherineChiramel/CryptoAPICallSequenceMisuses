@@ -1,0 +1,15 @@
+SPEC org.bouncycastle.crypto.engines.AESEngine
+
+FORBIDDEN
+	AESEngine();
+
+EVENTS
+	c1: newInstance();
+	Con := c1;
+	
+ORDER
+	Con
+	
+ENSURES
+	generatedAESEngine[this];
+

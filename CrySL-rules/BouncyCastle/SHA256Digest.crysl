@@ -1,0 +1,48 @@
+SPEC org.bouncycastle.crypto.digests.SHA256Digest
+
+OBJECTS
+	org.bouncycastle.crypto.digests.SHA256Digest digest;
+	byte[] encodedState;
+	
+	byte inputByte;
+	byte[] inputBytes;
+	int inputBytesOffset;
+	int inputBytesLen;
+	
+	byte[] outputBytes;
+	int outputBytesOffset;
+	
+EVENTS
+	c1: SHA256Digest();
+	c2: SHA256Digest(digest);
+//	@param encodedState the encoded state from the originating digest.
+	c3: SHA256Digest(encodedState);
+	Con := c1 | c2 | c3;
+	
+	u1: update(inputByte);
+	u2: update(inputBytes, inputBytesOffset, inputBytesLen);
+	Update := u1 | u2;
+	
+	df1: doFinal(outputBytes, outputBytesOffset);
+	DoFinal := df1;
+	
+	r1: reset();
+	Reset := r1;
+	
+ORDER
+	Con, ((Reset?, Update+)+, DoFinal)*
+	
+CONSTRAINTS
+	length[inputBytes] >= inputBytesOffset + inputBytesLen;
+	inputBytesOffset >= 0;
+	inputBytesLen > 0;
+	length[outputBytes] >= outputBytesOffset;
+	outputBytesOffset >= 0;
+	
+REQUIRES
+	generatedSHA256Digest[digest];
+	
+ENSURES
+	generatedSHA256Digest[this] after Con;
+	digested[outputBytes];
+	

@@ -1,0 +1,5 @@
+// Deprecated
+SPEC org.bouncycastle.crypto.BufferedBlockCipher
+
+FORBIDDEN
+	BufferedBlockCipher(org.bouncycastle.crypto.BlockCipher);

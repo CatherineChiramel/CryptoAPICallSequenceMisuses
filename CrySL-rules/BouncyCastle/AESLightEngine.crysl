@@ -1,0 +1,13 @@
+SPEC org.bouncycastle.crypto.engines.AESLightEngine
+
+EVENTS	
+	c1: AESLightEngine();
+	Con := c1;
+	
+ORDER
+	Con
+
+ENSURES
+	generatedAESLightEngine[this];
+
+

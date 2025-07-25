@@ -1,0 +1,5 @@
+//The AESFastEngine class is deprecated and insecure. This crysl rule ensures that a AESFastEngine object is considered insecure.
+SPEC org.bouncycastle.crypto.engines.AESFastEngine
+	
+FORBIDDEN
+	AESFastEngine();

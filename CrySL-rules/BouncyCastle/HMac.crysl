@@ -1,0 +1,46 @@
+SPEC org.bouncycastle.crypto.macs.HMac
+
+OBJECTS
+	org.bouncycastle.crypto.Digest digest;
+	int byteLen;
+	
+	org.bouncycastle.crypto.CipherParameters params;
+	
+	byte inputByte;
+	byte[] inputBytes;
+	int inputBytesLen;
+	int inputBytesOffset;
+	
+	byte[] outputBytes;
+	int outputBytesOffset;
+
+
+EVENTS
+	c1: HMac(digest);
+	Con := c1;
+	
+	i1 : init(params);
+	Init := i1;
+	
+	u1: update(inputByte);
+	u2: update(inputBytes, inputBytesOffset, inputBytesLen);
+	Update := u1 | u2;
+	
+	DoFinal: doFinal(outputBytes, outputBytesOffset);
+	
+ORDER
+	Con, (Init, Update+, DoFinal)+
+	
+CONSTRAINTS
+	length[inputBytes] >= inputBytesOffset + inputBytesLen;
+	length[outputBytes] >= outputBytesOffset;
+	inputBytesOffset >= 0;
+	inputBytesLen > 0;
+	outputBytesOffset >= 0;
+	
+REQUIRES
+	generatedSHA256Digest[digest];
+	generatedKeyParameter[params];
+
+ENSURES
+	macced[outputBytes];

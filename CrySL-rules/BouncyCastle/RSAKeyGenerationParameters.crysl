@@ -1,0 +1,20 @@
+SPEC org.bouncycastle.crypto.params.RSAKeyGenerationParameters
+
+OBJECTS
+	java.security.SecureRandom random;
+	java.math.BigInteger publicExponent;
+	int strength;
+	int certainty;
+
+EVENTS
+	c1: RSAKeyGenerationParameters(publicExponent, random, strength, certainty);
+	Con := c1;
+
+ORDER
+	Con
+
+REQUIRES
+	randomized[random];
+	
+ENSURES
+	generatedRSAKeyGenerationParameters[this];

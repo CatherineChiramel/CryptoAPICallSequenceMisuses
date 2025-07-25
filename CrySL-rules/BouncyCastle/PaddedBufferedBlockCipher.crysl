@@ -1,0 +1,49 @@
+SPEC org.bouncycastle.crypto.paddings.PaddedBufferedBlockCipher
+
+OBJECTS
+	org.bouncycastle.crypto.CipherParameters params;
+	org.bouncycastle.crypto.paddings.BlockCipherPadding padding;
+	org.bouncycastle.crypto.BlockCipher cipher;
+	
+	byte plainTextByte;
+	byte[] plainText;
+	int plainTextOffset;
+	int plainTextLen;
+	
+	byte[] cipherText;
+	int cipherTextOffset;
+	
+	boolean isEncryption;
+	
+EVENTS
+	c1: PaddedBufferedBlockCipher(cipher);
+	c2: PaddedBufferedBlockCipher(cipher, padding);
+	Con := c1 | c2;
+
+	i1: init(isEncryption, params);
+	Init := i1;
+
+	p1: processByte(plainTextByte, cipherText, cipherTextOffset);
+	p2: processBytes(plainText, plainTextOffset, plainTextLen, cipherText, cipherTextOffset);
+	Process := p1 | p2;
+	
+	df1: doFinal(cipherText, cipherTextOffset);
+	DoFinal:= df1;
+	
+ORDER
+	Con, (Init, Process, DoFinal)+
+	
+CONSTRAINTS
+	length[plainText] >= plainTextOffset + plainTextLen;
+	length[cipherText] >= cipherTextOffset;
+	plainTextOffset >= 0;
+	plainTextLen > 0;
+	cipherTextOffset >= 0;
+	
+REQUIRES
+	generatedBlockCipher[cipher];
+	generatedParametersWithIV[params];
+	generatedPKCS7Padding[padding];
+	
+ENSURES
+	encrypted[cipherText];

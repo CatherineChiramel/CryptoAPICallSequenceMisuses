@@ -1,0 +1,26 @@
+SPEC org.bouncycastle.crypto.ec.ECElGamalDecryptor
+
+OBJECTS
+	org.bouncycastle.crypto.CipherParameters keyParams;
+	org.bouncycastle.crypto.ec.ECPair pair;
+	org.bouncycastle.math.ec.ECPoint plainText;
+
+EVENTS
+	c1: ECElGamalDecryptor();
+	Con := c1;
+	
+	i1: init(keyParams);
+	Init := i1;
+
+	d1: plainText = decrypt(pair);
+	Decrypt := d1;
+
+ORDER
+	Con, (Init, Decrypt+)+
+
+REQUIRES
+	generatedECPair[pair];
+	generatedECPrivateKeyParameters[keyParams];
+
+ENSURES
+	generatedECElGamalDecrypt[plainText] after Decrypt;
